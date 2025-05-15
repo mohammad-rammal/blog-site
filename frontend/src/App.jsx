@@ -6,6 +6,7 @@ import Register from "./pages/forms/Register";
 import Posts from "./pages/posts/Posts";
 import CreatePost from "./pages/create-post/CreatePost";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import Footer from "./components/footer/Footer";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/posts/create-post" element={<CreatePost />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 };
