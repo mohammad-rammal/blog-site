@@ -17,32 +17,35 @@ const Footer = () => {
   ];
 
   return (
-    <nav className="navbar-footer">
-      <ul className="nav-links-footer">
-        {links.map((link, index) => (
-          <li
-            key={index}
-            className="nav-link-footer"
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-            style={{
-              border:
-                hoveredIndex === null || hoveredIndex === index
-                  ? "1px solid var(--main-color)"
-                  : "1px solid transparent",
-              transition:
-                hoveredIndex === null || hoveredIndex === index
-                  ? "all 0.2s ease-in-out "
-                  : "all 0.2s ease-in-out ",
-            }}
-          >
-            <Link to={link.path} className="nav-link-footer-link">
-              <i className={`bi ${link.icon}`}></i> {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <footer>
+      <div className="footer">Copyright 2022 &copy;</div>
+      <nav className="navbar-footer">
+        <ul className="nav-links-footer">
+          {links.map((link, index) => (
+            <li
+              key={index}
+              className="nav-link-footer"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => setHoveredIndex(null)}
+              style={{
+                border:
+                  hoveredIndex === null || hoveredIndex === index
+                    ? "1px solid var(--main-color)"
+                    : "1px solid transparent",
+                transition:
+                  hoveredIndex === null || hoveredIndex === index
+                    ? "all 0.2s ease-in-out "
+                    : "all 0.2s ease-in-out ",
+              }}
+            >
+              <Link to={link.path} className="nav-link-footer-link">
+                <i className={`bi ${link.icon}`}></i> {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </footer>
   );
 };
 

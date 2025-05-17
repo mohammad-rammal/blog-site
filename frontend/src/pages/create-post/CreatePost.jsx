@@ -1,4 +1,86 @@
+import { useState } from "react";
+import { toast } from "react-toastify";
+import "./create-post.css";
+
 const CreatePost = () => {
-  return <div>CreatePost</div>;
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [file, setFile] = useState(null);
+
+  const titleHandler = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const categoryHandler = (e) => {
+    setCategory(e.target.value);
+  };
+
+  const descriptionHandler = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const fileHandler = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  // Form Submit Handler
+  const formSubmitHandler = (e) => {
+    e.preventDefault();
+    if (title.trim() === "") return toast.error("Title is required!");
+    if (description.trim() === "")
+      return toast.error("Description is required!");
+    if (category.trim() === "") return toast.error("Category is required!");
+    if (!file) return toast.error("File is required!");
+
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("category", category);
+
+    // @TODO send form data to the server
+  };
+
+  return (
+    <section className="create-post">
+      <h1 className="create-post-title">Create New Post</h1>
+      <form onSubmit={formSubmitHandler} className="create-post-form">
+        <input
+          value={title}
+          onChange={titleHandler}
+          type="text"
+          placeholder="Post Title"
+          className="create-post-input"
+        />
+        <select
+          value={category}
+          onChange={categoryHandler}
+          className="create-post-input"
+        >
+          <option disabled>Select A Category</option>
+          <option value="music">music</option>
+          <option value="coffee">coffee</option>
+        </select>
+        <textarea
+          value={description}
+          onChange={descriptionHandler}
+          className="create-post-textarea"
+          rows="5"
+          placeholder="Post Description"
+        ></textarea>
+        <input
+          onChange={fileHandler}
+          type="file"
+          name="file"
+          id="file"
+          className="create-post-upload"
+        />
+        <button type="submit" className="create-post-btn">
+          Create
+        </button>
+      </form>
+    </section>
+  );
 };
 export default CreatePost;

@@ -7,6 +7,8 @@ import Posts from "./pages/posts/Posts";
 import CreatePost from "./pages/create-post/CreatePost";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import Footer from "./components/footer/Footer";
+import { ToastContainer } from "react-toastify";
+import PostDetails from "./pages/post-details/PostDetails";
 
 const App = () => {
   return (
@@ -18,9 +20,11 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/posts" element={<Posts />} />
         <Route path="/posts/create-post" element={<CreatePost />} />
+        <Route path="/posts/details/:id" element={<PostDetails />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
       <Footer />
+      <ToastContainer theme="colored" position="top-center" />
     </BrowserRouter>
   );
 };

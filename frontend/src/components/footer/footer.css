@@ -1,8 +1,21 @@
+.footer {
+  color: var(--white-color);
+  font-size: 21px;
+  background-color: var(--blue-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+}
+
 .navbar-footer {
   display: none;
 }
 
 @media (max-width: 990px) {
+  .footer {
+    display: none;
+  }
   .navbar-footer {
     display: block;
     position: fixed;
