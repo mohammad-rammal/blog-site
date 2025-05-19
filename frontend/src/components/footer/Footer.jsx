@@ -18,7 +18,7 @@ const Footer = () => {
 
   return (
     <footer>
-      <div className="footer">Copyright 2022 &copy;</div>
+      <div className="footer">Copyright 2025 &copy;</div>
       <nav className="navbar-footer">
         <ul className="nav-links-footer">
           {links.map((link, index) => (

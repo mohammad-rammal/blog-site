@@ -3,10 +3,15 @@ import { posts } from "../../assets/dummyData";
 import "./post-details.css";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import AddComment from "../../components/comments/AddComment";
+import CommentList from "../../components/comments/CommentList";
+import Swal from "sweetalert2";
+import UpdatePostModal from "./UpdatePostModal";
 
 const PostDetails = () => {
   const { id } = useParams();
   const [file, setFile] = useState(null);
+  const [updatePost, setUpdatePost] = useState(false);
   const post = posts.find((p) => p._id === parseInt(id));
 
   useEffect(() => {
@@ -21,6 +26,32 @@ const PostDetails = () => {
 
   const imageHandler = (e) => {
     setFile(e.target.files[0]);
+  };
+
+  // Delete Post Handler
+  const deletePostHandler = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your post has been deleted.",
+          icon: "success",
+        });
+      }
+    });
+  };
+
+  // Toggle Update
+  const updatePostHandler = () => {
+    setUpdatePost(true);
   };
 
   return (
@@ -75,12 +106,17 @@ const PostDetails = () => {
           <small>{post.likes.length} Likes</small>
         </div>
         <div>
-          <i className="bi bi-pencil-square"></i>
-          <i className="bi bi-trash-fill"></i>
+          <i onClick={updatePostHandler} className="bi bi-pencil-square"></i>
+          <i onClick={deletePostHandler} className="bi bi-trash-fill"></i>
         </div>
       </div>
-      <div className=""></div>
-      <div className=""></div>
+
+      <AddComment />
+      <CommentList />
+
+      {updatePost && (
+        <UpdatePostModal post={post} setUpdatePost={setUpdatePost} />
+      )}
     </section>
   );
 };

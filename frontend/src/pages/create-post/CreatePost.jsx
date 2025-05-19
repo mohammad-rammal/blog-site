@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import "./create-post.css";
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
@@ -8,23 +10,11 @@ const CreatePost = () => {
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
 
-  const titleHandler = (e) => {
-    setTitle(e.target.value);
-  };
+  const titleHandler = (e) => setTitle(e.target.value);
+  const categoryHandler = (e) => setCategory(e.target.value);
+  const descriptionHandler = (content) => setDescription(content);
+  const fileHandler = (e) => setFile(e.target.files[0]);
 
-  const categoryHandler = (e) => {
-    setCategory(e.target.value);
-  };
-
-  const descriptionHandler = (e) => {
-    setDescription(e.target.value);
-  };
-
-  const fileHandler = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  // Form Submit Handler
   const formSubmitHandler = (e) => {
     e.preventDefault();
     if (title.trim() === "") return toast.error("Title is required!");
@@ -58,17 +48,36 @@ const CreatePost = () => {
           onChange={categoryHandler}
           className="create-post-input"
         >
-          <option disabled>Select A Category</option>
+          <option disabled value="">
+            Select A Category
+          </option>
           <option value="music">music</option>
           <option value="coffee">coffee</option>
         </select>
-        <textarea
+        {/* <textarea
           value={description}
           onChange={descriptionHandler}
           className="create-post-textarea"
           rows="5"
           placeholder="Post Description"
-        ></textarea>
+        ></textarea> */}
+        <SunEditor
+          setOptions={{
+            minHeight: 150,
+            resizingBar: false,
+            buttonList: [
+              ["undo", "redo"],
+              ["formatBlock"],
+              ["bold", "underline", "italic", "strike"],
+              ["fontColor", "hiliteColor"],
+            ],
+          }}
+          placeholder="Post Description"
+          setContents={description}
+          onChange={descriptionHandler}
+          className="create-post-textarea"
+        />
+
         <input
           onChange={fileHandler}
           type="file"
@@ -83,4 +92,5 @@ const CreatePost = () => {
     </section>
   );
 };
+
 export default CreatePost;
