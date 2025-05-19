@@ -7,7 +7,7 @@ const {
 // /api/auth/register
 router.post("/register", registerUserCtrl);
 
-// /api/auth/register
+// /api/auth/login
 router.post("/login", loginUserCtrl);
 
 module.exports = router;

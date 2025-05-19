@@ -2,10 +2,14 @@ import { Link } from "react-router-dom";
 import "./form.css";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../redux/apiCalls/authApiCall";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
 
   const emailHandler = (e) => {
     setEmail(e.target.value);
@@ -19,6 +23,8 @@ const Login = () => {
     e.preventDefault();
     if (email.trim() == "") return toast.warn("Email is required!");
     if (password.trim() == "") return toast.warn("Password is required!");
+
+    dispatch(loginUser({ email, password }));
   };
 
   return (

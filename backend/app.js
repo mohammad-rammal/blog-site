@@ -1,5 +1,6 @@
 const express = require("express");
 const connectDB = require("./config/connectDB");
+const cors = require("cors");
 const { errorHandler, notFound } = require("./middlewares/error");
 require("dotenv").config();
 
@@ -11,6 +12,13 @@ const app = express();
 
 // Middlewares
 app.use(express.json());
+
+// Cors Policy
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 // Routes
 app.use("/api/auth", require("./routes/authRoute"));

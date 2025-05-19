@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "start": "node start.js"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
