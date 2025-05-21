@@ -6,7 +6,10 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import UpdateProfileModal from "./UpdateProfileModal";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserProfile } from "../../redux/apiCalls/profileApiCall";
+import {
+  getUserProfile,
+  uploadProfilePhoto,
+} from "../../redux/apiCalls/profileApiCall";
 import { useParams } from "react-router-dom";
 
 const Profile = () => {
@@ -30,6 +33,10 @@ const Profile = () => {
   const formSubmitHandler = (e) => {
     e.preventDefault();
     if (!file) return toast.warning("Image is missing!");
+
+    const formData = new FormData();
+    formData.append("image", file);
+    dispatch(uploadProfilePhoto(formData));
   };
 
   // Delete Account Handler
@@ -86,8 +93,8 @@ const Profile = () => {
             </button>
           </form>
         </div>
-        <h1 className="profile-username">{profile.username}</h1>
-        <p className="profile-bio">{profile.bio}</p>
+        <h1 className="profile-username">{profile?.username}</h1>
+        <p className="profile-bio">{profile?.bio}</p>
         <div className="user-date-joined">
           <strong>Date Joined: </strong>
           <span>{new Date(profile?.createdAt).toDateString()}</span>
@@ -98,7 +105,7 @@ const Profile = () => {
         </button>
       </div>
       <div className="profile-posts-list">
-        <h2 className="profile-posts-list-title">{profile.username} Posts</h2>
+        <h2 className="profile-posts-list-title">{profile?.username} Posts</h2>
         <PostList posts={posts} />
       </div>
       <div className="delete-account">

@@ -9,6 +9,9 @@ const profileSlice = createSlice({
     setProfile(state, action) {
       state.profile = action.payload;
     },
+    setProfilePhoto(state, action) {
+      state.profile.profilePhoto = action.payload;
+    },
   },
 });
 

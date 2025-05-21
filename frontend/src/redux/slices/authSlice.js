@@ -19,6 +19,9 @@ const authSlice = createSlice({
     logout(state) {
       state.user = null;
     },
+    setUserPhoto(state, action) {
+      state.user.profilePhoto = action.payload;
+    },
   },
 });
 
