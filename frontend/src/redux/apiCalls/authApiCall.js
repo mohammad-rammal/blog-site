@@ -22,7 +22,19 @@ export function loginUser(user) {
       localStorage.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       toast.error(error.response.data.message);
-      console.log(error);
+    }
+  };
+}
+
+// Register User
+export function registerUser(user) {
+  return async (dispatch) => {
+    try {
+      const { data } = await baseUrl.post("/api/auth/register", user);
+
+      dispatch(authAction.register(data.message));
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
   };
 }

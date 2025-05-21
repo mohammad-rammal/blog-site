@@ -5,14 +5,22 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import UpdateProfileModal from "./UpdateProfileModal";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserProfile } from "../../redux/apiCalls/profileApiCall";
+import { useParams } from "react-router-dom";
 
 const Profile = () => {
   const [file, setFile] = useState(null);
   const [updateProfile, setUpdateProfile] = useState(false);
 
+  const dispatch = useDispatch();
+  const { profile } = useSelector((state) => state.profile);
+  const { id } = useParams();
+
   useEffect(() => {
+    dispatch(getUserProfile(id));
     window.scrollTo(0, 0);
-  }, []);
+  }, [id]);
 
   const fileHandler = (e) => {
     setFile(e.target.files[0]);
@@ -55,7 +63,7 @@ const Profile = () => {
       <div className="profile-header">
         <div className="profile-image-wrapper">
           <img
-            src={file ? URL.createObjectURL(file) : "/images/user-avatar.png"}
+            src={file ? URL.createObjectURL(file) : profile?.profilePhoto.url}
             alt=""
             className="profile-image"
           />
@@ -78,11 +86,11 @@ const Profile = () => {
             </button>
           </form>
         </div>
-        <h1 className="profile-username">Mohammad Rammal</h1>
-        <p className="profile-bio">Welcome To My Profile</p>
+        <h1 className="profile-username">{profile.username}</h1>
+        <p className="profile-bio">{profile.bio}</p>
         <div className="user-date-joined">
           <strong>Date Joined: </strong>
-          <span>Sun Feb 03 2024</span>
+          <span>{new Date(profile?.createdAt).toDateString()}</span>
         </div>
         <button onClick={updateProfileHandler} className="profile-update-btn">
           <i className="bi bi-file-person-fill"></i>
@@ -90,7 +98,7 @@ const Profile = () => {
         </button>
       </div>
       <div className="profile-posts-list">
-        <h2 className="profile-posts-list-title">Mohammad Posts</h2>
+        <h2 className="profile-posts-list-title">{profile.username} Posts</h2>
         <PostList posts={posts} />
       </div>
       <div className="delete-account">
