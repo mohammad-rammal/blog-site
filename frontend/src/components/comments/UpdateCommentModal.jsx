@@ -1,7 +1,5 @@
 import { useState } from "react";
 import "./update-comment.css";
-import SunEditor from "suneditor-react";
-import "suneditor/dist/css/suneditor.min.css";
 import { toast } from "react-toastify";
 
 const UpdateCommentModal = ({ setUpdateComment }) => {

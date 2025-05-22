@@ -1,9 +1,11 @@
 import Swal from "sweetalert2";
 import "./comment-list.css";
+import moment from "moment";
+
 import { useState } from "react";
 import UpdateCommentModal from "./UpdateCommentModal";
 
-const CommentList = () => {
+const CommentList = ({ comments, user }) => {
   const [updateComment, setUpdateComment] = useState(false);
 
   // Delete Comment Handler
@@ -34,25 +36,30 @@ const CommentList = () => {
 
   return (
     <div className="comment-list">
-      <h4 className="comment-list-count">2 Comment</h4>
-      {[1, 2].map((comment) => {
+      <h4 className="comment-list-count">{comments?.length} Comment</h4>
+      {comments?.map((comment) => {
         return (
-          <div key={comment} className="comment-item">
+          <div key={comment._id} className="comment-item">
             <div className="comment-item-info">
-              <div className="comment-item-username">Mohammad Rammal</div>
-              <div className="comment-item-time">2 hours ago</div>
+              <div className="comment-item-username">{comment.username}</div>
+              <div className="comment-item-time">
+                {moment(comment.createdAt).fromNow()}
+              </div>
             </div>
-            <p className="comment-item-text">Hello this is amazing</p>
-            <div className="comment-item-icon-wrapper">
-              <i
-                onClick={updateCommentHandler}
-                className="bi bi-pencil-square"
-              ></i>
-              <i
-                onClick={deleteCommentHandler}
-                className="bi bi-trash-fill"
-              ></i>
-            </div>
+
+            <p className="comment-item-text">{comment.text}</p>
+            {user?._id === comment.user && (
+              <div className="comment-item-icon-wrapper">
+                <i
+                  onClick={updateCommentHandler}
+                  className="bi bi-pencil-square"
+                ></i>
+                <i
+                  onClick={deleteCommentHandler}
+                  className="bi bi-trash-fill"
+                ></i>
+              </div>
+            )}
           </div>
         );
       })}

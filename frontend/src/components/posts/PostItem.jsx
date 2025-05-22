@@ -30,7 +30,10 @@ const PostItem = ({ items }) => {
             {items?.category}
           </Link>
         </div>
-        <p className="post-item-description">{items?.description}</p>
+        <div
+          className="post-item-description"
+          dangerouslySetInnerHTML={{ __html: items?.description }}
+        ></div>
         <Link className="post-item-link" to={`/posts/details/${items?._id}`}>
           Read More...
         </Link>

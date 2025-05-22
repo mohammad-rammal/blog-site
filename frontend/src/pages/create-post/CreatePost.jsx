@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import "./create-post.css";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
+import { SpinnerDotted } from "spinners-react";
+
+import { createPost } from "../../redux/apiCalls/postApiCall";
 
 const CreatePost = () => {
+  const dispatch = useDispatch();
+  const { loading, isPostCreated } = useSelector((state) => state.post);
+
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -29,8 +37,17 @@ const CreatePost = () => {
     formData.append("description", description);
     formData.append("category", category);
 
-    // @TODO send form data to the server
+    // send form data to the server
+    dispatch(createPost(formData));
   };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isPostCreated) {
+      navigate("/");
+    }
+  }, [isPostCreated, navigate]);
 
   return (
     <section className="create-post">
@@ -86,7 +103,7 @@ const CreatePost = () => {
           className="create-post-upload"
         />
         <button type="submit" className="create-post-btn">
-          Create
+          {loading ? <SpinnerDotted size={25} color="white" /> : "Create"}
         </button>
       </form>
     </section>

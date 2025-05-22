@@ -40,3 +40,59 @@ export function fetchPostsBasedOnCategory(category) {
     }
   };
 }
+
+// Create Post
+export function createPost(newPost) {
+  return async (dispatch, getState) => {
+    try {
+      dispatch(postAction.setLoading());
+
+      await baseUrl.post(`/api/posts`, newPost, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      dispatch(postAction.setIsPostCreated());
+      setTimeout(() => dispatch(postAction.clearIsPostCreated()), 2000);
+    } catch (error) {
+      toast.error(error.response.data.message);
+      dispatch(postAction.clearLoading());
+    }
+  };
+}
+
+// Fetch Single Post
+export function fetchSinglePost(postId) {
+  return async (dispatch) => {
+    try {
+      const { data } = await baseUrl.get(`/api/posts/${postId}`);
+
+      dispatch(postAction.setPost(data));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
+// Toggle Like Post
+export function toggleLikePost(postId) {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await baseUrl.put(
+        `/api/posts/like/${postId}`,
+        {},
+        {
+          headers: {
+            Authorization: "Bearer " + getState().auth.user.token,
+          },
+        }
+      );
+
+      dispatch(postAction.setLike(data));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
