@@ -1,13 +1,27 @@
 import PostList from "../../components/posts/PostList";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { posts, categories } from "../../assets/dummyData";
+import { categories } from "../../assets/dummyData";
 import "./post.css";
 import Pagination from "../../components/pagination/Pagination";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPosts, getPostsCount } from "../../redux/apiCalls/postApiCall";
+
+const POST_PET_PAGE = 3;
 
 const Post = () => {
+  const dispatch = useDispatch();
+  const { postsCount, posts } = useSelector((state) => state.post);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pages = Math.ceil(postsCount / POST_PET_PAGE);
+
   useEffect(() => {
+    dispatch(fetchPosts(currentPage));
     window.scrollTo(0, 0);
+  }, [currentPage]);
+
+  useEffect(() => {
+    dispatch(getPostsCount());
   }, []);
 
   return (
@@ -16,7 +30,11 @@ const Post = () => {
         <PostList posts={posts} />
         <Sidebar categories={categories} />
       </section>
-      <Pagination />
+      <Pagination
+        pages={pages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 };
