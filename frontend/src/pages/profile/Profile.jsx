@@ -114,7 +114,10 @@ const Profile = () => {
         </button>
       </div>
       {updateProfile && (
-        <UpdateProfileModal setUpdateProfile={setUpdateProfile} />
+        <UpdateProfileModal
+          profile={profile}
+          setUpdateProfile={setUpdateProfile}
+        />
       )}
     </section>
   );

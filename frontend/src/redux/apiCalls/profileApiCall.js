@@ -26,7 +26,7 @@ export function uploadProfilePhoto(newPhoto) {
         {
           headers: {
             Authorization: "Bearer " + getState().auth.user.token,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/form-data", // To make json file
           },
         }
       );
@@ -38,6 +38,33 @@ export function uploadProfilePhoto(newPhoto) {
       // modify the user in local storage in new photo
       const user = JSON.parse(localStorage.getItem("userInfo"));
       user.profilePhoto = data?.profilePhoto;
+      localStorage.setItem("userInfo", JSON.stringify(user));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
+// Update User Profile
+export function updateProfile(userId, profile) {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await baseUrl.put(
+        `/api/users/profile/${userId} `,
+        profile,
+        {
+          headers: {
+            Authorization: "Bearer " + getState().auth.user.token,
+          },
+        }
+      );
+
+      dispatch(profileAction.updateProfile(data));
+      dispatch(authAction.setUsername(data.username));
+
+      // modify the user in local storage with username
+      const user = JSON.parse(localStorage.getItem("userInfo"));
+      user.username = data?.username;
       localStorage.setItem("userInfo", JSON.stringify(user));
     } catch (error) {
       toast.error(error.response.data.message);
