@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import "./update-comment.css";
 import { toast } from "react-toastify";
+import { updateComment } from "../../redux/apiCalls/commentApiCall";
 
-const UpdateCommentModal = ({ setUpdateComment }) => {
-  const [text, setText] = useState("This is so great");
+const UpdateCommentModal = ({ setUpdateComment, commentForUpdate }) => {
+  const dispatch = useDispatch();
+
+  const [text, setText] = useState(commentForUpdate?.text);
 
   const textHandler = (e) => setText(e.target.value);
 
@@ -16,11 +20,32 @@ const UpdateCommentModal = ({ setUpdateComment }) => {
   const formSubmitHandler = (e) => {
     e.preventDefault();
     if (text.trim() === "") return toast.error("Text is required!");
+
+    dispatch(updateComment(commentForUpdate?._id, { text }));
+    setUpdateComment(false);
   };
+
+  const modalRef = useRef();
+
+  useEffect(() => {
+    const handleOutsideClick = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        setUpdateComment(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
 
   return (
     <div className="update-comment">
-      <form onSubmit={formSubmitHandler} className="update-comment-form">
+      <form
+        ref={modalRef}
+        onSubmit={formSubmitHandler}
+        className="update-comment-form"
+      >
         <abbr title="close">
           <i
             onClick={closeUpdateCommentHandler}

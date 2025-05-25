@@ -97,6 +97,15 @@
   cursor: pointer;
 }
 
+.post-details-info-write {
+  font-size: 17px;
+  color: var(--gray-color);
+}
+
+.post-details-info-write-link {
+  color: var(--secondary-color);
+}
+
 /* Media Queries */
 @media (max-width: 820px) {
   .post-details {

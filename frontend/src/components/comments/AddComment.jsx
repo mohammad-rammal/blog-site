@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import "./add-comment.css";
 import { toast } from "react-toastify";
+import { createComment } from "../../redux/apiCalls/commentApiCall";
 
-const AddComment = () => {
+const AddComment = ({ postId }) => {
+  const dispatch = useDispatch();
+
   const [text, setText] = useState("");
 
   // Form Submit Handler
@@ -10,6 +14,12 @@ const AddComment = () => {
     e.preventDefault();
     if (text.trim() === "") return toast.warn("Please write a comment");
 
+    dispatch(
+      createComment({
+        text,
+        postId,
+      })
+    );
     setText("");
   };
 
