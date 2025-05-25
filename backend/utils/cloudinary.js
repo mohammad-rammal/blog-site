@@ -28,7 +28,7 @@ const cloudinaryRemoveImage = async (imagePublicId) => {
     return result;
   } catch (error) {
     console.error("Cloudinary delete error:", error);
-    throw new Error("Internal Server Error (cloudinary)");
+    // throw new Error("Internal Server Error (cloudinary)");
   }
 };
 

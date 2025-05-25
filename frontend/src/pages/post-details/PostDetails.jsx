@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./post-details.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -8,8 +8,10 @@ import CommentList from "../../components/comments/CommentList";
 import Swal from "sweetalert2";
 import UpdatePostModal from "./UpdatePostModal";
 import {
+  deletePost,
   fetchSinglePost,
   toggleLikePost,
+  updatePostImage,
 } from "../../redux/apiCalls/postApiCall";
 
 const PostDetails = () => {
@@ -20,6 +22,8 @@ const PostDetails = () => {
   const { id } = useParams();
   const [file, setFile] = useState(null);
   const [updatePost, setUpdatePost] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchSinglePost(id));
@@ -35,6 +39,10 @@ const PostDetails = () => {
   const updateImageSubmitHandler = (e) => {
     e.preventDefault();
     if (!file) toast.warning("File is missing!");
+
+    const formData = new FormData();
+    formData.append("image", file);
+    dispatch(updatePostImage(formData, post?._id));
   };
 
   const imageHandler = (e) => {
@@ -53,11 +61,8 @@ const PostDetails = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your post has been deleted.",
-          icon: "success",
-        });
+        dispatch(deletePost(post?._id));
+        navigate(`/profile/${user?._id}`);
       }
     });
   };

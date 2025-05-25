@@ -1,6 +1,5 @@
 import PostList from "../../components/posts/PostList";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { categories } from "../../assets/dummyData";
 import "./post.css";
 import Pagination from "../../components/pagination/Pagination";
 import { useEffect, useState } from "react";
@@ -28,7 +27,7 @@ const Post = () => {
     <div>
       <section className="posts-page">
         <PostList posts={posts} />
-        <Sidebar categories={categories} />
+        <Sidebar />
       </section>
       <Pagination
         pages={pages}

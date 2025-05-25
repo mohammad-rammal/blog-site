@@ -96,3 +96,56 @@ export function toggleLikePost(postId) {
     }
   };
 }
+
+// Update Post Image
+export function updatePostImage(newImage, postId) {
+  return async (dispatch, getState) => {
+    try {
+      await baseUrl.put(`/api/posts/upload-image/${postId}`, newImage, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      toast.success("New post image uploaded successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
+// Update Post
+export function updatePost(newPost, postId) {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await baseUrl.put(`/api/posts/${postId}`, newPost, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+        },
+      });
+
+      dispatch(postAction.setPost(data));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
+// Delete Post
+export function deletePost(postId) {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await baseUrl.delete(`/api/posts/${postId}`, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+        },
+      });
+
+      dispatch(postAction.deletePost(data.postId));
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}

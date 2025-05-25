@@ -1,10 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./update-post.css";
+import { useDispatch, useSelector } from "react-redux";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css";
 import { toast } from "react-toastify";
+import { updatePost } from "../../redux/apiCalls/postApiCall";
+import { fetchCategories } from "../../redux/apiCalls/categoryApiCall";
 
 const UpdatePostModal = ({ setUpdatePost, post }) => {
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => state.category);
+
   const [title, setTitle] = useState(post.title);
   const [description, setDescription] = useState(post.description);
   const [category, setCategory] = useState(post.category);
@@ -15,8 +21,13 @@ const UpdatePostModal = ({ setUpdatePost, post }) => {
 
   const plainDescription = description.replace(/<[^>]*>/g, "").trim();
 
-  // Close Update Post Handler
+  // Close Update Post Handler from X
   const closeUpdatePostHandler = () => {
+    setUpdatePost(false);
+  };
+
+  // Close Update Post Modal Handler
+  const closeUpdateModalHandler = () => {
     setUpdatePost(false);
   };
 
@@ -28,10 +39,17 @@ const UpdatePostModal = ({ setUpdatePost, post }) => {
     if (plainDescription.trim() === "")
       return toast.error("Description is required!");
     if (category.trim() === "") return toast.error("Category is required!");
+
+    dispatch(updatePost({ title, category, description }, post?._id));
+    setUpdatePost(false);
   };
 
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
+
   return (
-    <div className="update-post">
+    <div onClick={closeUpdateModalHandler} className="update-post">
       <form onSubmit={formSubmitHandler} className="update-post-form">
         <abbr title="close">
           <i
@@ -54,8 +72,13 @@ const UpdatePostModal = ({ setUpdatePost, post }) => {
           <option disabled value="">
             Select A Category
           </option>
-          <option value="music">music</option>
-          <option value="travel">travel</option>
+          {categories.map((category) => {
+            return (
+              <option key={category._id} value={category.title}>
+                {category.title}
+              </option>
+            );
+          })}
         </select>
         <SunEditor
           setOptions={{
