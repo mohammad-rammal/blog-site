@@ -14,3 +14,39 @@ export function fetchCategories() {
     }
   };
 }
+
+// Create Category
+export function createCategory(newCategory) {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await baseUrl.post("/api/categories", newCategory, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+        },
+      });
+
+      dispatch(categoryAction.createCategory(data));
+      toast.success("Category created successfully");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
+// Delete Category
+export function deleteCategory(categoryId) {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await baseUrl.delete(`/api/categories/${categoryId}`, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+        },
+      });
+
+      dispatch(categoryAction.deleteCategory(data.categoryId));
+      toast.success(data.message);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}

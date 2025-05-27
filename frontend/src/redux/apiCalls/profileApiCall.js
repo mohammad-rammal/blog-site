@@ -94,3 +94,35 @@ export function deleteProfile(userId) {
     }
   };
 }
+
+// Get Users Count (for admin dashboard)
+export function getUsersCount() {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await baseUrl.get(`/api/users/count`, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+        },
+      });
+      dispatch(profileAction.setUserCount(data));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
+// Get All Users Profile (for admin dashboard)
+export function getAllUsersProfile() {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await baseUrl.get(`/api/users/profile`, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+        },
+      });
+      dispatch(profileAction.setProfiles(data));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}

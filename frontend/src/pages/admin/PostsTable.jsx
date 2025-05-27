@@ -1,12 +1,22 @@
 import { Link } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
+import { useDispatch, useSelector } from "react-redux";
 import "./admin-table.css";
 import Swal from "sweetalert2";
-import { posts } from "../../assets/dummyData";
+import { useEffect } from "react";
+import { deletePost, getAllPosts } from "../../redux/apiCalls/postApiCall";
 
 const PostsTable = () => {
+  const dispatch = useDispatch();
+
+  const { posts } = useSelector((state) => state.post);
+
+  useEffect(() => {
+    dispatch(getAllPosts());
+  }, []);
+
   // Delete Post Handler
-  const deletePostHandler = () => {
+  const deletePostHandler = (postId) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -17,6 +27,7 @@ const PostsTable = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
+        dispatch(deletePost(postId));
         Swal.fire({
           title: "Deleted!",
           text: "Post has been deleted.",
@@ -48,9 +59,9 @@ const PostsTable = () => {
                   <td>
                     <div className="table-image">
                       <img
-                        src="/images/post-avatar.png"
+                        src={item.user.profilePhoto?.url}
                         alt=""
-                        className="table-post-image"
+                        className="table-user-image"
                       />
                       <span className="table-postname">
                         {item.user.username}
@@ -63,7 +74,9 @@ const PostsTable = () => {
                       <button>
                         <Link to={`/posts/details/${item._id}`}>View Post</Link>
                       </button>
-                      <button onClick={deletePostHandler}>Delete Post</button>
+                      <button onClick={() => deletePostHandler(item._id)}>
+                        Delete Post
+                      </button>
                     </div>
                   </td>
                 </tr>

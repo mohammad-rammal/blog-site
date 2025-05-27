@@ -15,6 +15,19 @@ export function fetchPosts(pageNumber) {
   };
 }
 
+// Get All Posts
+export function getAllPosts() {
+  return async (dispatch) => {
+    try {
+      const { data } = await baseUrl.get(`/api/posts`);
+
+      dispatch(postAction.setPosts(data));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
 // Get Posts Count
 export function getPostsCount() {
   return async (dispatch) => {

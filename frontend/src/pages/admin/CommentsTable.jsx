@@ -1,10 +1,15 @@
 import AdminSidebar from "./AdminSidebar";
+import { useDispatch, useSelector } from "react-redux";
 import "./admin-table.css";
 import Swal from "sweetalert2";
+import { deleteComment } from "../../redux/apiCalls/commentApiCall";
 
 const CommentsTable = () => {
+  const dispatch = useDispatch();
+  const { comments } = useSelector((state) => state.comment);
+
   // Delete Comment Handler
-  const deleteCommentHandler = () => {
+  const deleteCommentHandler = (commentId) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -15,6 +20,7 @@ const CommentsTable = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
+        dispatch(deleteComment(commentId));
         Swal.fire({
           title: "Deleted!",
           text: "Comment has been deleted.",
@@ -39,24 +45,26 @@ const CommentsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {[1, 2, 3, 4, 5].map((item) => {
+            {comments.map((item, index) => {
               return (
-                <tr key={item}>
-                  <td>{item}</td>
+                <tr key={item?._id}>
+                  <td>{index + 1}</td>
                   <td>
                     <div className="table-image">
                       <img
-                        src="/images/comment-avatar.png"
+                        src={item?.username?.profilePhoto?.url}
                         alt=""
                         className="table-comment-image"
                       />
-                      <span className="table-username">Mohammad Rammal</span>
+                      <span className="table-username">
+                        {item?.user?.username}
+                      </span>
                     </div>
                   </td>
-                  <td>Thank you for the post!!</td>
+                  <td>{item?.text}</td>
                   <td>
                     <div className="table-button-group">
-                      <button onClick={deleteCommentHandler}>
+                      <button onClick={() => deleteCommentHandler(item?._id)}>
                         Delete Comment
                       </button>
                     </div>

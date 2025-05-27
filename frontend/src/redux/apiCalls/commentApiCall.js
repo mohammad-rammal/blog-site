@@ -1,6 +1,7 @@
 import baseUrl from "../../Api/baseURL";
 import { toast } from "react-toastify";
 import { postAction } from "../slices/postSlice";
+import { commentAction } from "../slices/commentSlice";
 
 // Create Comment
 export function createComment(newComment) {
@@ -50,7 +51,25 @@ export function deleteComment(commentId) {
         },
       });
 
+      dispatch(commentAction.deleteComment(commentId));
       dispatch(postAction.deleteCommentFromPost(commentId));
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+}
+
+// Fetch All Comments
+export function fetchAllComments() {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await baseUrl.get(`/api/comments`, {
+        headers: {
+          Authorization: "Bearer " + getState().auth.user.token,
+        },
+      });
+
+      dispatch(commentAction.setComments(data));
     } catch (error) {
       toast.error(error.response.data.message);
     }
