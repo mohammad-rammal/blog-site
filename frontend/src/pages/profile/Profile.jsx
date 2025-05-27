@@ -1,5 +1,3 @@
-import PostList from "../../components/posts/PostList";
-import { posts } from "../../assets/dummyData";
 import "./profile.css";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -7,23 +5,39 @@ import Swal from "sweetalert2";
 import UpdateProfileModal from "./UpdateProfileModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  deleteProfile,
   getUserProfile,
   uploadProfilePhoto,
 } from "../../redux/apiCalls/profileApiCall";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { SpinnerCircularFixed } from "spinners-react";
+import PostItem from "../../components/posts/PostItem";
+import { logoutUser } from "../../redux/apiCalls/authApiCall";
 
 const Profile = () => {
   const [file, setFile] = useState(null);
   const [updateProfile, setUpdateProfile] = useState(false);
 
   const dispatch = useDispatch();
-  const { profile } = useSelector((state) => state.profile);
+  const { profile, loading, isProfileDeleted } = useSelector(
+    (state) => state.profile
+  );
+  const { user } = useSelector((state) => state.auth);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getUserProfile(id));
     window.scrollTo(0, 0);
   }, [id]);
+
+  useEffect(() => {
+    if (isProfileDeleted) {
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    }
+  }, [isProfileDeleted, navigate]);
 
   const fileHandler = (e) => {
     setFile(e.target.files[0]);
@@ -51,6 +65,8 @@ const Profile = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
+        dispatch(deleteProfile(user?._id));
+        dispatch(logoutUser());
         Swal.fire({
           title: "Deleted!",
           text: "Your account has been deleted.",
@@ -65,6 +81,14 @@ const Profile = () => {
     setUpdateProfile(true);
   };
 
+  if (loading) {
+    return (
+      <div className="profile-loader">
+        <SpinnerCircularFixed size={85} color="blue" />
+      </div>
+    );
+  }
+
   return (
     <section className="profile">
       <div className="profile-header">
@@ -74,24 +98,27 @@ const Profile = () => {
             alt=""
             className="profile-image"
           />
-          <form onSubmit={formSubmitHandler}>
-            <abbr title="Choose profile photo">
-              <label
-                htmlFor="file"
-                className="bi bi-camera-fill upload-profile-photo-icon"
-              ></label>
-            </abbr>
-            <input
-              onChange={fileHandler}
-              style={{ display: "none" }}
-              type="file"
-              name="file"
-              id="file"
-            />
-            <button type="submit" className="upload-profile-photo-btn">
-              Upload
-            </button>
-          </form>
+
+          {user?._id === profile?._id && (
+            <form onSubmit={formSubmitHandler}>
+              <abbr title="Choose profile photo">
+                <label
+                  htmlFor="file"
+                  className="bi bi-camera-fill upload-profile-photo-icon"
+                ></label>
+              </abbr>
+              <input
+                onChange={fileHandler}
+                style={{ display: "none" }}
+                type="file"
+                name="file"
+                id="file"
+              />
+              <button type="submit" className="upload-profile-photo-btn">
+                Upload
+              </button>
+            </form>
+          )}
         </div>
         <h1 className="profile-username">{profile?.username}</h1>
         <p className="profile-bio">{profile?.bio}</p>
@@ -99,19 +126,39 @@ const Profile = () => {
           <strong>Date Joined: </strong>
           <span>{new Date(profile?.createdAt).toDateString()}</span>
         </div>
-        <button onClick={updateProfileHandler} className="profile-update-btn">
-          <i className="bi bi-file-person-fill"></i>
-          Update Profile
-        </button>
+
+        {user?._id === profile?._id && (
+          <button onClick={updateProfileHandler} className="profile-update-btn">
+            <i className="bi bi-file-person-fill"></i>
+            Update Profile
+          </button>
+        )}
       </div>
       <div className="profile-posts-list">
         <h2 className="profile-posts-list-title">{profile?.username} Posts</h2>
-        <PostList posts={posts} />
+        {Array.isArray(profile?.posts) && profile?.posts?.length === 0 ? (
+          <div className="profile-posts-list-empty">
+            <h3>You did not write any post</h3>
+          </div>
+        ) : (
+          profile?.posts &&
+          profile?.posts?.map((post) => (
+            <PostItem
+              key={post._id}
+              items={post}
+              username={profile?.username}
+              userId={profile?._id}
+            />
+          ))
+        )}
       </div>
+
       <div className="delete-account">
-        <button onClick={deleteAccountHandler} className="delete-account-btn">
-          Delete Your Account
-        </button>
+        {user?._id === profile?._id && (
+          <button onClick={deleteAccountHandler} className="delete-account-btn">
+            Delete Your Account
+          </button>
+        )}
       </div>
       {updateProfile && (
         <UpdateProfileModal

@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 
-const PostItem = ({ items }) => {
+const PostItem = ({ items, username, userId }) => {
+  const profileLink = userId
+    ? `/profile/${userId}`
+    : `/profile/${items?.user?._id}`;
+
   return (
     <div className="post-item">
       <div className="post-item-image-wrapper">
@@ -10,11 +14,8 @@ const PostItem = ({ items }) => {
         <div className="post-item-info">
           <div className="post-item-author">
             <strong>Author: </strong>
-            <Link
-              className="post-item-username"
-              to={`/profile/${items?.user?._id}`}
-            >
-              {items?.user.username}
+            <Link className="post-item-username" to={profileLink}>
+              {username ? username : items?.user.username}
             </Link>
           </div>
           <div className="post-item-date">

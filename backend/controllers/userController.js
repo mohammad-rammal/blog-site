@@ -9,6 +9,7 @@ const {
   cloudinaryRemoveMultipleImage,
 } = require("../utils/cloudinary");
 const { Post } = require("../models/Post");
+const { Comment } = require("../models/Comment");
 
 /**********************************************
  * @desc      Get All Users Profile
@@ -155,15 +156,24 @@ module.exports.deleteUserCtrl = asyncHandler(async (req, res) => {
   }
 
   // 5- delete the profile picture from cloudinary
-  await cloudinaryRemoveImage(user.profilePhoto.publicId);
+  if (user.profilePhoto.publicId !== null) {
+    await cloudinaryRemoveImage(user.profilePhoto.publicId);
+  }
 
-  // 6- delete user posts and comments
-  await Post.deleteMany({ user: user._id });
-  await Comment.deleteMany({ user: user._id });
+  // 6- delete user posts
+  if (posts.length > 0) {
+    await Post.deleteMany({ user: user._id });
+  }
 
-  // 7- delete the user himself
+  // 7- delete user comments
+  const commentCount = await Comment.countDocuments({ user: user._id });
+  if (commentCount > 0) {
+    await Comment.deleteMany({ user: user._id });
+  }
+
+  // 8- delete the user himself
   await User.findByIdAndDelete(req.params.id);
 
-  // 8- send a response to the client
+  // 9- send a response to the client
   res.status(200).json({ message: "Your profile has been deleted" });
 });

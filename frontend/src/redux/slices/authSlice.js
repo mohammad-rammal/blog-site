@@ -12,6 +12,7 @@ const authSlice = createSlice({
   reducers: {
     login(state, action) {
       state.user = action.payload;
+      state.registerMessage = null;
     },
     register(state, action) {
       state.registerMessage = action.payload;
