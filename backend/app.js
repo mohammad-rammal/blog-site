@@ -17,8 +17,15 @@ const app = express();
 // Middlewares
 app.use(express.json());
 
+// Cors Policy
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 // Prevent XSS (Cross Site Scripting) Attacks
-app.use(xss());
 
 // HPP (Prevent HTTP Param Pollution)
 app.use(hpp());
@@ -31,13 +38,6 @@ app.use(
   rateLimiting({
     windowMs: 10 * 60 * 1000, // 10 mins
     max: 100,
-  })
-);
-
-// Cors Policy
-app.use(
-  cors({
-    origin: "http://localhost:5173",
   })
 );
 
