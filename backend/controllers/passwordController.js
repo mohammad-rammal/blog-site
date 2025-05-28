@@ -35,6 +35,7 @@ module.exports.sendResetPasswordLinkCtrl = asyncHandler(async (req, res) => {
       userId: user._id,
       token: crypto.randomBytes(32).toString("hex"),
     });
+    await verificationToken.save();
   }
 
   // 4- Creating link
@@ -60,7 +61,7 @@ module.exports.sendResetPasswordLinkCtrl = asyncHandler(async (req, res) => {
  * @method    GET
  * @access    public
  *********************************************/
-module.exports.getResetPasswordLinkCtrl = asyncHandler(async (res, res) => {
+module.exports.getResetPasswordLinkCtrl = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.userId);
   if (!user) {
     return res.status(400).json({ message: "Invalid link!" });
@@ -85,7 +86,7 @@ module.exports.getResetPasswordLinkCtrl = asyncHandler(async (res, res) => {
  * @method    POST
  * @access    public
  *********************************************/
-module.exports.resetPasswordCtrl = asyncHandler(async (res, res) => {
+module.exports.resetPasswordCtrl = asyncHandler(async (req, res) => {
   const { error } = validateNewPassword(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });

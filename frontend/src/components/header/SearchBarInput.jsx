@@ -40,7 +40,7 @@ const SearchBarInput = ({ setResults, setToggle, input, setInput }) => {
         type="text"
         placeholder="Search..."
       />
-      <i onClick={clearHandler} class="bi bi-x"></i>
+      <i onClick={clearHandler} className="bi bi-x"></i>
     </div>
   );
 };
