@@ -15,6 +15,23 @@ export function fetchPosts(pageNumber) {
   };
 }
 
+// IMPORTANT: Return data from the function
+export function infinitePosts(pageNumber) {
+  return async (dispatch) => {
+    try {
+      const { data } = await baseUrl.get(`/api/posts?pageNumber=${pageNumber}`);
+      console.log("API response data:", data);
+
+      dispatch(postAction.setPosts(data.posts || data)); // Adjust as needed
+
+      return { payload: data.posts || data };
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Error fetching posts");
+      return { payload: [] };
+    }
+  };
+}
+
 // Get All Posts
 export function getAllPosts() {
   return async (dispatch) => {
