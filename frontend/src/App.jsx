@@ -19,6 +19,7 @@ import CommentsTable from "./pages/admin/CommentsTable";
 import ForgotPassword from "./pages/forms/ForgotPassword";
 import ResetPassword from "./pages/forms/ResetPassword";
 import { useSelector } from "react-redux";
+import VerifyEmail from "./pages/verify-email/VerifyEmail";
 
 const App = () => {
   const { user } = useSelector((state) => state.auth);
@@ -37,6 +38,10 @@ const App = () => {
         <Route
           path="/register"
           element={!user ? <Register /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/users/:userId/verify/:token"
+          element={!user ? <VerifyEmail /> : <Navigate to="/" />}
         />
 
         <Route path="/forgot-password" element={<ForgotPassword />} />

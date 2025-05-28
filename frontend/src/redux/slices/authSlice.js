@@ -8,6 +8,7 @@ const authSlice = createSlice({
       : null,
 
     registerMessage: null,
+    isEmailVerified: false,
   },
   reducers: {
     login(state, action) {
@@ -25,6 +26,10 @@ const authSlice = createSlice({
     },
     setUsername(state, action) {
       state.user.username = action.payload;
+    },
+    setIsEmailVerified(state) {
+      state.isEmailVerified = true;
+      state.registerMessage = null;
     },
   },
 });
