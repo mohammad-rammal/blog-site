@@ -48,7 +48,7 @@ module.exports.registerUserCtrl = asyncHandler(async (req, res) => {
   await verificationToken.save();
 
   // making the link
-  const link = `http://localhost:5173/users/${user._id}/verify/${verificationToken.token}`;
+  const link = `${process.env.CLIENT_DOMAIN}/users/${user._id}/verify/${verificationToken.token}`;
 
   // putting the link into an html template
   const htmlTemplate = `<div>
@@ -107,7 +107,7 @@ module.exports.loginUserCtrl = asyncHandler(async (req, res) => {
       await verificationToken.save();
     }
 
-    const link = `http://localhost:5173/users/${user._id}/verify/${verificationToken.token}`;
+    const link = `${process.env.CLIENT_DOMAIN}/users/${user._id}/verify/${verificationToken.token}`;
 
     const htmlTemplate = `<div>
                           <p>Click on the link below to verify your email</p>

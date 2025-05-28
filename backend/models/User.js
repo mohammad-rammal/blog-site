@@ -100,9 +100,27 @@ function validateUpdateUser(data) {
   return schema.validate(data);
 }
 
+// Validate Email
+function validateEmail(data) {
+  const schema = Joi.object({
+    email: Joi.string().trim().min(5).max(100).required().email(),
+  });
+  return schema.validate(data);
+}
+
+// Validate New Password
+function validateNewPassword(data) {
+  const schema = Joi.object({
+    password: Joi.string().trim().min(8).required(),
+  });
+  return schema.validate(data);
+}
+
 module.exports = {
   User,
   validateRegisterUser,
   validateLoginUser,
   validateUpdateUser,
+  validateEmail,
+  validateNewPassword,
 };

@@ -26,6 +26,7 @@ app.use("/api/users", require("./routes/userRoute"));
 app.use("/api/posts", require("./routes/postRoute"));
 app.use("/api/comments", require("./routes/commentRoute"));
 app.use("/api/categories", require("./routes/categoryRoute"));
+app.use("/api/password", require("./routes/passwordRoute"));
 
 // Not Found Middleware
 app.use(notFound);
